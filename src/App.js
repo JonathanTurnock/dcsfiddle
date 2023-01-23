@@ -107,7 +107,7 @@ function App() {
           }}
           p={"xs"}
         >
-          {response}
+          {JSON.stringify(response, undefined, 2)}
         </Code>
       </div>
     </div>
