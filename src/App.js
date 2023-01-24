@@ -13,8 +13,10 @@ import { docs } from "./docs";
 import { useGreetingModal } from "./hooks/useGreetingModal";
 import { useShareModal } from "./hooks/useShareModal";
 import { ShareModal } from "./components/ShareModal";
+import { useSearchParam } from "react-use";
 
 function App() {
+  const command = useSearchParam("command");
   const editorRef = useRef(null);
   const { responses, submitting, submitCommand } = useDcsCommand();
   const greetingModal = useGreetingModal();
@@ -31,7 +33,9 @@ function App() {
                 <Editor
                   theme="vs-dark"
                   defaultLanguage="lua"
-                  defaultValue="return env.mission.theatre"
+                  defaultValue={
+                    (command && atob(command)) || "return env.mission.theatre"
+                  }
                   onMount={handleEditorDidMount}
                   options={{
                     fontFamily: "IBM Plex Mono",

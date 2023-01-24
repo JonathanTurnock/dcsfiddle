@@ -9,6 +9,8 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHandshake } from "@fortawesome/free-solid-svg-icons";
 
 export const GreetingModal = ({ greetingModal }) => {
   return (
@@ -18,7 +20,12 @@ export const GreetingModal = ({ greetingModal }) => {
       onClose={greetingModal.close}
       centered
       overflow="inside"
-      title={<Title size="h2">Welcome to DCS Fiddle 👋</Title>}
+      title={
+        <Group spacing="md">
+          <FontAwesomeIcon icon={faHandshake} />
+          <Title variant="h2"> Welcome to DCS Fiddle</Title>
+        </Group>
+      }
     >
       <Stack>
         <Text>This website is a text editor and console.</Text>

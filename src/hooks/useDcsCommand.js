@@ -1,10 +1,6 @@
 import axios from "axios";
 import { showNotification } from "@mantine/notifications";
 import { useState } from "react";
-import { fromByteArray } from "base64-js";
-
-const encoder = new TextEncoder();
-const toBase64 = (str) => fromByteArray(encoder.encode(str));
 
 export const useDcsCommand = () => {
   const [submitting, setSubmitting] = useState(false);
@@ -14,7 +10,7 @@ export const useDcsCommand = () => {
     try {
       setSubmitting(true);
       const { data } = await axios.get("http://localhost:12080/api/", {
-        params: { command: toBase64(command) },
+        params: { command: btoa(command) },
       });
       setResponses([...responses, [new Date().toISOString(), data]]);
       showNotification({

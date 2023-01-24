@@ -1,5 +1,4 @@
 import { useLocation } from "react-use";
-import { toBase64 } from "../utils/toBase64";
 import { useState } from "react";
 import { BehaviorSubject } from "rxjs";
 
@@ -13,9 +12,8 @@ export const useShareModal = (valueProvider) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpen = () => {
-    console.log(url);
     const _url = new URL(url.origin);
-    _url.searchParams.set("command", toBase64(valueProvider()));
+    _url.searchParams.set("command", btoa(valueProvider()));
 
     link$.next(_url.href);
     setIsOpen(true);

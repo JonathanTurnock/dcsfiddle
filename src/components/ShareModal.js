@@ -1,13 +1,9 @@
 import { Observable } from "rxjs";
-import { Dialog, Group, Modal, Stack, Text, Title } from "@mantine/core";
+import { Group, Modal, Stack, Text, Title } from "@mantine/core";
 import { Prism } from "@mantine/prism";
 import { useObservable } from "react-use";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPager,
-  faPaperPlane,
-  faShare,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 /**
  * Share a Link Dialog, used for people to share the link to their editor content
@@ -26,7 +22,7 @@ export const ShareModal = ({ open, onClose, link$ }) => {
       title={
         <Group spacing="md">
           <FontAwesomeIcon icon={faPaperPlane} />
-          <Title>Share Script</Title>
+          <Title variant="h2"> Share Script</Title>
         </Group>
       }
       opened={open}

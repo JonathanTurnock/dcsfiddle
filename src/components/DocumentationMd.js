@@ -5,7 +5,6 @@ import {
   Container,
   Image,
   LoadingOverlay,
-  Navbar,
   NavLink,
   Stack,
   Text,

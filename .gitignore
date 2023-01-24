@@ -24,3 +24,5 @@ yarn-error.log*
 
 
 .idea
+/.$c4.drawio.dtmp
+/.$c4.drawio.bkp

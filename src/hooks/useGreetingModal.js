@@ -3,8 +3,8 @@ import { useState } from "react";
 
 export const useGreetingModal = () => {
   const [dontShowAgainChecked, setDontShowAgainChecked] = useLocalStorage(
-    "HIDE_GREETING_ON_START",
-    true
+    "DONT_SHOW_AGAIN",
+    false
   );
   const [isOpen, setIsOpen] = useState(dontShowAgainChecked ? false : true);
 
