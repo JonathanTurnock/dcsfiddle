@@ -31,18 +31,17 @@ const elementProps = z.object({
 
 const codeProps = elementProps.extend({
   inline: z.boolean().optional().transform(Boolean),
-  className: z
-    .string()
-    .optional()
-    .transform((it) => it?.replace("language-", "")),
+  className: z.string().optional(),
 });
 const _Code = (props) => {
-  const { inline, language, children } = codeProps.parse(props);
+  const { inline, className, children } = codeProps.parse(props);
 
   const deleted = { color: "red", label: "-" };
   const added = { color: "green", label: "+" };
 
   const highlights = {};
+
+  const language = className?.replace("language-", "");
 
   const lines = children
     .split("\n")
