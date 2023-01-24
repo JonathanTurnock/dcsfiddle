@@ -9,7 +9,7 @@ export const useDcsCommand = () => {
   const submitCommand = async (command) => {
     try {
       setSubmitting(true);
-      const { data } = await axios.get("http://localhost:12080/api/", {
+      const { data } = await axios.get("http://localhost:12080/api", {
         params: { command: btoa(command) },
       });
       setResponses([...responses, [new Date().toISOString(), data]]);

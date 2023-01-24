@@ -9,30 +9,7 @@ do
 
     local httpd_state = {}
 
-    -- this function converts base64 to string
-    function from_base64(data)
-        local b = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-        data = string.gsub(data, '[^' .. b .. '=]', '')
-        return (data:gsub('.', function(x)
-            if (x == '=') then
-                return ''
-            end
-            local r, f = '', (b:find(x) - 1)
-            for i = 6, 1, -1 do
-                r = r .. (f % 2 ^ i - f % 2 ^ (i - 1) > 0 and '1' or '0')
-            end
-            return r;
-        end):gsub('%d%d%d?%d?%d?%d?%d?%d?', function(x)
-            if (#x ~= 8) then
-                return ''
-            end
-            local c = 0
-            for i = 1, 8 do
-                c = c + (x:sub(i, i) == '1' and 2 ^ (8 - i) or 0)
-            end
-            return string.char(c)
-        end))
-    end
+    --[[{{from_base64.lua}}]]--
 
     -- include some functions from lua-users.org/wiki/StringRecipes
     function string:split(sSeparator, nMax, bRegexp)
@@ -81,28 +58,7 @@ do
     httpd_state.http_acceptor:settimeout(.0001)
     httpd_state.http_map = {} -- connection -> { handler => handler_func, txbuf => string } map
 
-    httpd.url_handlers = {}
-    
-    httpd.url_handlers["^/$"] = function(request, response)
-        response:return_text("UP")
-    end
-    
-    httpd.url_handlers["^/health$"] = function(requst, response)
-        res = {}
-        res.status = "UP"
-        res.version = httpd.version
-        response:return_json(res)
-    end
-    
-    httpd.url_handlers["^/api$"] = function(request, response)
-        local commandstring = from_base64(request._GET["command"])
-    
-        env.info("Executing command:" .. commandstring)
-    
-        local result = assert(loadstring(commandstring))()
-    
-        response:return_json(result)
-    end
+    --[[{{url_handlers.lua}}]]--
 
     local function http_handler(conn, conn_info)
         local request = {}
@@ -312,4 +268,3 @@ do
     httpd.start = httpd_start
 
 end
-
