@@ -1,16 +1,10 @@
-httpd.allow_cross_origin = true
+httpd.allow_cross_origin = false
 httpd.version = "0.3"
+
 do
     local require = require
-    local dofile = dofile
     local loadfile = loadfile
-    local lfs = lfs
-
-    local os = os
-    local io = io
-    local lfs = lfs
     local require = require
-    local loadlib = loadlib
 
     local httpd_state = {}
 
