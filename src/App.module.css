@@ -1,52 +1,52 @@
 .shell {
-    width: 100vw;
-    height: 100vh;
-    display: grid;
-    grid-template-rows: 66px auto;
-    grid-template-columns: 50px 1fr 1fr;
-    overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 66px auto;
+  grid-template-columns: 50px 1fr 1fr;
+  overflow: hidden;
 }
 
 .header {
-    grid-row: 1/2;
-    grid-column: 1/4;
-    display: flex;
+  grid-row: 1/2;
+  grid-column: 1/4;
+  display: flex;
 }
 
 .header header {
-    display: flex;
-    flex-direction: row;
-    flex: 1 1 auto;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 auto;
+  justify-content: space-between;
 }
 
 .navbar {
-    grid-column: 1/2;
-    grid-row: 2/4;
+  grid-column: 1/2;
+  grid-row: 2/4;
 }
 
 .editor {
-    grid-column: 2/3;
-    grid-row: 2/3;
-    display: flex;
-    border-bottom: solid #2D2F34 1px;
+  grid-column: 2/3;
+  grid-row: 2/3;
+  display: flex;
+  border-bottom: solid #2d2f34 1px;
 }
 
 .terminal {
-    grid-column: 3/4;
-    grid-row: 2/3;
-    display: flex;
-    overflow: auto;
+  grid-column: 3/4;
+  grid-row: 2/3;
+  display: flex;
+  overflow: auto;
 }
 
 .terminal pre {
-    overflow-x: hidden;
-    white-space: pre-wrap;       /* css-3 */
-    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-    white-space: -o-pre-wrap;    /* Opera 7 */
-    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+  overflow-x: hidden;
+  white-space: pre-wrap; /* css-3 */
+  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+  white-space: -o-pre-wrap; /* Opera 7 */
+  word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 
 .terminalDate {
-    color: green;
+  color: green;
 }

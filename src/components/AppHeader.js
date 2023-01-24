@@ -1,6 +1,6 @@
 import { Button, Group, Header, Image, Title } from "@mantine/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperPlane, faQuestion } from "@fortawesome/free-solid-svg-icons";
+import { faInfo, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 export const AppHeader = ({ submitting, onSubmit, onHelp }) => (
   <Header height={66} p={"xs"}>
@@ -10,9 +10,7 @@ export const AppHeader = ({ submitting, onSubmit, onHelp }) => (
     </Group>
     <Group>
       <Button onClick={onHelp} variant="subtle">
-        <Group>
-          Help <FontAwesomeIcon icon={faQuestion} />
-        </Group>
+        <FontAwesomeIcon icon={faInfo} />
       </Button>
       <Button loading={submitting} onClick={onSubmit}>
         <Group>

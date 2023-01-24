@@ -1,12 +1,12 @@
 import {
   Checkbox,
+  Code,
   Group,
+  Image,
   Modal,
   Stack,
-  Title,
   Text,
-  Code,
-  Image,
+  Title,
 } from "@mantine/core";
 import { Prism } from "@mantine/prism";
 

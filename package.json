@@ -9,6 +9,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@fortawesome/free-regular-svg-icons": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
+    "@fortawesome/fontawesome-free-brands": "^5.0.13",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@mantine/core": "^5.10.1",
     "@mantine/dropzone": "^5.10.1",

@@ -12,7 +12,7 @@ export const Response = ({ date, response }) => {
         <CollapseButton collapsed={collapsed} onClick={toggleCollapse} />
         <Text size={"sm"}>{date}</Text>
       </Group>
-      <Collapse in={!collapsed} >
+      <Collapse in={!collapsed}>
         <Prism style={{ width: "100%" }} withLineNumbers language="json">
           {JSON.stringify(response, undefined, 2)}
         </Prism>
