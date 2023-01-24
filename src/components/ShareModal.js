@@ -1,4 +1,3 @@
-import { Observable } from "rxjs";
 import { Group, Modal, Stack, Text, Title } from "@mantine/core";
 import { Prism } from "@mantine/prism";
 import { useObservable } from "react-use";
