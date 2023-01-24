@@ -64,6 +64,8 @@ end
 
 The final step is to create a mission with the dcsfiddle httpd server running.
 
+> You can download an example mission from [/dcs-fiddle.miz](/dcs-fiddle.miz)
+
 Choose the theatre of your choice and add the following triggers.
 
 One to Load the script file
@@ -79,6 +81,8 @@ The `Do Script` trigger should run the following script:
 ```lua
 httpd.start(timer, env)
 ```
+
+## Verifying 
 
 If all has gone well you will get a little notice in the logs informing you
 

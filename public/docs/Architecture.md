@@ -4,7 +4,7 @@ The core Architecture of DCS fiddle is as documented below.
 
 It summarises how the DCS Fiddle executes commands in DCS.
 
-![architecture](/c4.drawio.svg)
+![architecture](/c4.svg)
 
 ## Server (HTTP Server)
 

@@ -10,7 +10,7 @@
 .nav {
   display: flex;
   grid-column: 1/2;
-  overflow-y: scroll;
+  overflow-y: auto;
   min-width: 256px;
   flex-direction: column;
   padding: 16px;
