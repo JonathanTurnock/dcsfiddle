@@ -1,50 +1,19 @@
 import "./App.module.css";
-import {
-  ActionIcon,
-  Button,
-  Code,
-  Group,
-  Header,
-  Image,
-  Navbar,
-  Title,
-  Tooltip,
-} from "@mantine/core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { Stack } from "@mantine/core";
 import Editor from "@monaco-editor/react";
-import { useRef, useState } from "react";
-import axios from "axios";
-import { showNotification } from "@mantine/notifications";
+import { useRef } from "react";
 import styles from "./App.module.css";
+import { Response } from "./components/Response";
+import { AppHeader } from "./components/AppHeader";
+import { AppNavbar } from "./components/AppNavbar";
+import { useDcsCommand } from "./hooks/useDcsCommand";
+import { HelpModal } from "./components/HelpModal";
+import { useHelp } from "./hooks/useHelp";
 
 function App() {
   const editorRef = useRef(null);
-  const [loading, setLoading] = useState(false);
-  const [response, setResponse] = useState();
-
-  const sendIt = async () => {
-    const command = editorRef.current.getValue();
-    try {
-      setLoading(true);
-      const { data } = await axios.get("http://localhost:12080/api/", {
-        params: { command },
-      });
-      setResponse(data);
-      showNotification({
-        message: "Success",
-        color: "green",
-      });
-    } catch (e) {
-      showNotification({
-        title: "Failed to execute",
-        message: e.toString(),
-        color: "red",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { responses, submitting, submitCommand } = useDcsCommand();
+  const help = useHelp();
 
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
@@ -53,36 +22,14 @@ function App() {
   return (
     <div className={styles.shell}>
       <div className={styles.header}>
-        <Header p={"xs"}>
-          <Group>
-            <Image height={48} width={48} src={"/logo256.png"} />
-            <Title style={{ fontFamily: "IBM Plex Mono" }}>DCS Fiddle...</Title>
-          </Group>
-          <Group>
-            <Button loading={loading} onClick={sendIt}>
-              <Group>
-                Send <FontAwesomeIcon icon={faPaperPlane} />
-              </Group>
-            </Button>
-          </Group>
-        </Header>
+        <AppHeader
+          submitting={submitting}
+          onSubmit={() => submitCommand(editorRef.current.getValue())}
+          onHelp={help.toggleHelpOpen}
+        />
       </div>
       <div className={styles.navbar}>
-        <Navbar styles={{ root: { height: "100%" } }}>
-          <Navbar.Section grow>
-            <Tooltip label="Home">
-              <ActionIcon
-                size={50}
-                color="light"
-                style={{
-                  borderRadius: 0,
-                }}
-              >
-                <FontAwesomeIcon icon={faHome} />
-              </ActionIcon>
-            </Tooltip>
-          </Navbar.Section>
-        </Navbar>
+        <AppNavbar />
       </div>
       <div className={styles.editor}>
         <Editor
@@ -97,19 +44,22 @@ function App() {
         />
       </div>
       <div className={styles.terminal}>
-        <Code
-          color="dark"
-          shade={9}
-          style={{
-            flex: "1 1 auto",
-            borderRadius: 0,
-            backgroundColor: "#1E1E1E",
-          }}
+        <Stack
           p={"xs"}
+          spacing={4}
+          style={{ display: "flex", flex: "1 1 auto" }}
         >
-          {JSON.stringify(response, undefined, 2)}
-        </Code>
+          {responses.map(([date, response]) => (
+            <Response key={date} response={response} date={date} />
+          ))}
+        </Stack>
       </div>
+      <HelpModal
+        open={help.helpOpen}
+        onClose={help.toggleHelpOpen}
+        showHelpOnStart={help.showHelpOnStart}
+        setShowHelpOnStart={help.setShowHelpOnStart}
+      />
     </div>
   );
 }
