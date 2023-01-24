@@ -31,8 +31,8 @@ export const ShareModal = ({ open, onClose, link$ }) => {
       <Stack>
         <Text>Share this link to send your LUA script.</Text>
         <Text>
-          This link contains your script, so its a unique link and wont result
-          in anyone else being able to change it.
+          This link contains your script as base64. Nobody can change your local
+          script.
         </Text>
         <Prism
           styles={{ code: { whiteSpace: "pre-wrap", lineBreak: "anywhere" } }}
