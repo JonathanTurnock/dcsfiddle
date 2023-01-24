@@ -1,7 +1,7 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
 import "@fontsource/ibm-plex-sans";
 import "@fontsource/ibm-plex-mono";
+import React from "react";
+import ReactDOM from "react-dom/client";
 import { NotificationsProvider } from "@mantine/notifications";
 import { MantineProvider } from "@mantine/core";
 import "./index.css";

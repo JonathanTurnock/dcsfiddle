@@ -59,7 +59,7 @@ function App() {
         },
         ...docs,
       ]),
-    []
+    [responses]
   );
 
   function handleEditorDidMount(editor, monaco) {
