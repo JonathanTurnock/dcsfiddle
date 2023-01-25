@@ -54,13 +54,12 @@ export const GreetingModal = ({ greetingModal }) => {
 
         <Text>
           The HTTP server is a downloadable lua script. You will need to create
-          a mission to load and run it.
+          a mission to load and run it as well as make modifications to your DCS files. Details can be Found in our docs.
         </Text>
 
-        <Text>Download Link:</Text>
         <Text variant="link">
-          <a href="/httpd.lua" target="_blank">
-            httpd.lua
+          <a href="/docs" target="_blank">
+            Getting Started Docs
           </a>
         </Text>
 
