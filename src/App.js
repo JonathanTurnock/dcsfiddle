@@ -13,7 +13,8 @@ import { docs } from "./docs";
 import { useGreetingModal } from "./hooks/useGreetingModal";
 import { useShareModal } from "./hooks/useShareModal";
 import { ShareModal } from "./components/ShareModal";
-import { useSearchParam } from "react-use";
+import { useBoolean, useSearchParam } from "react-use";
+import { ExploreModal } from "./components/ExploreModal";
 
 function App() {
   const command = useSearchParam("command");
@@ -21,6 +22,7 @@ function App() {
   const { responses, submitting, submitCommand } = useDcsCommand();
   const greetingModal = useGreetingModal();
   const shareDialog = useShareModal(() => editorRef.current.getValue());
+  const [open, toggleOpen] = useBoolean(false);
 
   const router = useMemo(
     () =>
@@ -69,6 +71,7 @@ function App() {
   return (
     <div className={styles.shell}>
       <GreetingModal greetingModal={greetingModal} />
+      <ExploreModal open={open} onClose={toggleOpen} />
       <ShareModal
         link$={shareDialog.link$}
         open={shareDialog.isOpen}
@@ -80,6 +83,7 @@ function App() {
           onSubmit={() => submitCommand(editorRef.current.getValue())}
           onShowGreetingModal={greetingModal.open}
           onShare={shareDialog.open}
+          onExplore={toggleOpen}
         />
       </div>
       <div className={styles.navbar}>

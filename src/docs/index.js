@@ -11,6 +11,11 @@ const _docs = [
     path: "/docs/architecture",
     src: "/docs/Architecture.md",
   },
+  {
+    label: "Explorer",
+    path: "/docs/explorer",
+    src: "/docs/Explorer.md",
+  },
 ];
 
 export const docs = _docs.map((it) => ({
