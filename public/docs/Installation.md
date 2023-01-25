@@ -59,6 +59,7 @@ end
 ```
 
 > LUA uses two dashes as a line comment, put those at the start of the line
+> Changes to this file are lost on each update of DCS
 
 ## Creating the Mission
 
