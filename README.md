@@ -28,7 +28,7 @@ The HTTP server is a downloadable lua script. You will need to create a mission 
 
 See the Getting started guide inside the documentation for more information.
 
-https://develop.dcsfiddle.pages.dev/docs
+https://dcsfiddle.pages.dev/docs
 
 ## Disclaimer
 
