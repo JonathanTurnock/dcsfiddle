@@ -1,5 +1,3 @@
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-
 # DCS Fiddle
 
 This website is a text editor and console.
@@ -31,6 +29,10 @@ The HTTP server is a downloadable lua script. You will need to create a mission 
 See the Getting started guide inside the documentation for more information.
 
 https://dcsfiddle.pages.dev/docs
+
+## License
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 
 ## Disclaimer
 
