@@ -7,6 +7,7 @@ import { MantineProvider } from "@mantine/core";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { EnvironmentContextProvider } from "./context/environment";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -21,7 +22,9 @@ root.render(
       }}
     >
       <NotificationsProvider>
-        <App />
+        <EnvironmentContextProvider>
+          <App />
+        </EnvironmentContextProvider>
       </NotificationsProvider>
     </MantineProvider>
   </React.StrictMode>
