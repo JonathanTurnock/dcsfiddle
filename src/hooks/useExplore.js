@@ -1,7 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
 import { showNotification } from "@mantine/notifications";
-import { useEvent } from "react-use";
 import { useEnvironment } from "../context/environment";
 
 const getCommand = (item) => `

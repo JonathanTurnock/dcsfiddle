@@ -10,7 +10,7 @@ import {
   Title,
 } from "@mantine/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDownload, faHandshake } from "@fortawesome/free-solid-svg-icons";
+import { faDownload } from "@fortawesome/free-solid-svg-icons";
 import { config } from "../config";
 import { Prism } from "@mantine/prism";
 
