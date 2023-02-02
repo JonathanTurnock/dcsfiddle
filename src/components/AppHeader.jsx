@@ -63,7 +63,7 @@ export const AppHeader = ({
   };
 
   return (
-    <Header height={66} p={"xs"} style={{ zIndex: 0 }}>
+    <Header height={66} p={"xs"} zIndex={1}>
       <Group>
         <Image height={48} width={48} src={"/logo256.png"} />
         <Title style={{ fontFamily: "IBM Plex Mono" }}>DCS Fiddle...</Title>

@@ -13,13 +13,16 @@ export const useDcsCommand = () => {
       setSubmitting(true);
       const { data } = await axios.get(
         `http://127.0.0.1:${environment.port}/${btoa(command)}`,
-        { params: { env: environment.selectedState || "default" } }
+        {
+          params: { env: environment.selectedState || "default" },
+          validateStatus: false,
+        }
       );
-      setResponses([...responses, [new Date().toISOString(), data]]);
-      showNotification({
-        message: "Successfully Submitted",
-        color: "green",
-      });
+
+      setResponses([
+        ...responses,
+        [new Date().toISOString(), data.result || data.error || ""],
+      ]);
     } catch (e) {
       showNotification({
         title: "Failed to Submit Command",

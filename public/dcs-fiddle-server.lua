@@ -486,7 +486,7 @@ local create_client_handler = function()
 
                     if (not success) then
                         _error("Failed to handle request due to \n" .. res)
-                        response.body = string.format('{"error": "%s"}', tostring(res))
+                        response.body = net.lua2json({error=tostring(res)})
                         response.status = INTERNAL_SERVER_ERROR
                     else
                         __info("Handled request")

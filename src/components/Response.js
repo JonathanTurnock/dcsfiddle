@@ -13,7 +13,11 @@ export const Response = ({ date, response }) => {
         <Text size={"sm"}>{date}</Text>
       </Group>
       <Collapse in={!collapsed}>
-        <Prism style={{ width: "100%" }} withLineNumbers language="json">
+        <Prism
+          style={{ width: "100%", zIndex: 0 }}
+          withLineNumbers
+          language="json"
+        >
           {JSON.stringify(response, undefined, 2)}
         </Prism>
       </Collapse>
