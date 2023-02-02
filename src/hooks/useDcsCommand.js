@@ -15,7 +15,6 @@ export const useDcsCommand = () => {
         `http://127.0.0.1:${environment.port}/${btoa(command)}`,
         {
           params: { env: environment.selectedState || "default" },
-          validateStatus: false,
         }
       );
 

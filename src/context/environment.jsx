@@ -5,6 +5,7 @@ import { showNotification } from "@mantine/notifications";
 import axios from "axios";
 import useSWR from "swr";
 import { find, first } from "lodash";
+import { useSearchParam } from "react-use";
 
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
@@ -15,7 +16,16 @@ export const useEnvironment = () => useContext(EnvironmentContext);
 const def = first(config.envs);
 
 export const EnvironmentContextProvider = ({ children }) => {
-  const [env, setEnv] = useState({ ...def, selectedState: undefined });
+  const pathEnv = useSearchParam("env");
+  const pathState = useSearchParam("state");
+
+  const pathEnvironment = pathEnv && find(config.envs, { id: pathEnv });
+
+  const [env, setEnv] = useState(
+    pathEnvironment
+      ? { ...pathEnvironment, selectedState: pathState || undefined }
+      : { ...def, selectedState: pathState || undefined }
+  );
 
   const { data, error, isLoading } = useSWR(
     `http://127.0.0.1:${env.port}/${btoa('return "UP"')}?env=${

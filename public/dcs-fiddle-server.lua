@@ -230,7 +230,7 @@ local __info = function(message)
     end
 end
 
-local _error = function(message)
+local __error = function(message)
     local message = '[dcs-fiddle-server] - ' .. message
     if (log and log.error) then
         log.error(message)
@@ -256,7 +256,7 @@ local function handle_request(luastring, env)
         __info("[handle_request] - Executing string via dostring_in")
         local str, err = net.dostring_in(env, luastring)
         if (err) then
-            _error(string.format("Error while executing string in %s\n%s", env, str))
+            __error(string.format("Error while executing string in %s\n%s", env, str))
         end
         return str
     else
@@ -313,7 +313,7 @@ local function receive_http()
     local received, err = coroutine.yield("*l")
 
     if (err) then
-        _error("Failed to get start-line due to " .. err)
+        __error("Failed to get start-line due to " .. err)
         return
     end
 
@@ -428,8 +428,13 @@ local function send_http(client, response)
     end
 
     __info("Sending HTTP Response")
-    __info(">> " .. response_string)
-    client:send(response_string)
+    --__debug(">> " .. response_string)
+    local index, err = client:send(response_string)
+    if (err) then
+        __error("Failed to fully send due to: " .. err)
+    else
+        __info("Successfully sent response")
+    end
 end
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -477,7 +482,7 @@ local create_client_handler = function()
                 __info("Handling Request")
                 local success, res = pcall(base64.decode, string.sub(request.path, 2))
                 if (not success) then
-                    _error("Failed to read input due to " .. res)
+                    __error("Failed to read input due to " .. res)
                     response.status = BAD_REQUEST
                 else
                     local env = request.parameters and request.parameters.env
@@ -485,7 +490,7 @@ local create_client_handler = function()
                     local success, res = pcall(handle_request, res, env)
 
                     if (not success) then
-                        _error("Failed to handle request due to \n" .. res)
+                        __error("Failed to handle request due to \n" .. res)
                         response.body = net.lua2json({error=tostring(res)})
                         response.status = INTERNAL_SERVER_ERROR
                     else
@@ -511,13 +516,12 @@ end
 local register_new_clients = function()
     local client = tcp_server:accept()
     if (client) then
-        client:settimeout(0)
         local id = get_client_id()
         local coro = create_client_handler()
         clients[id] = { id = id, coro = coro, client = client }
         local success, res = coroutine.resume(coro, id, client)
         if (not success) then
-            _error("Failed to start client handler " .. res)
+            __error("Failed to start client handler " .. res)
         else
             clients[id].receive_patten = res
         end
@@ -537,7 +541,7 @@ local receive_and_resume_clients = function()
                 __info("Resuming client handler with line " .. line)
                 local success, res = coroutine.resume(it.coro, line)
                 if (not success) then
-                    _error("Failed to resume client handler " .. res)
+                    __error("Failed to resume client handler " .. res)
                 else
                     it.receive_patten = res
                 end
@@ -556,7 +560,7 @@ local function create_server(address, port)
     tcp_server:settimeout(0)
 
     if not tcp_server then
-        _error("Could not bind socket.")
+        __error("Could not bind socket.")
     end
 
     local ip, port = tcp_server:getsockname()

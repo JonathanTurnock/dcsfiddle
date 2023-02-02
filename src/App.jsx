@@ -18,8 +18,12 @@ import { ExploreModal } from "./components/ExploreModal";
 import { useEnvironment } from "./context/environment";
 
 function App() {
-  const { environments, environment, setEnvironment, status } =
-    useEnvironment();
+  const env = useSearchParam("env");
+  const state = useSearchParam("state");
+  const { environments, environment, setEnvironment, status } = useEnvironment(
+    env,
+    state
+  );
   const command = useSearchParam("command");
   const editorRef = useRef(null);
   const { responses, submitting, submitCommand } = useDcsCommand();
