@@ -588,22 +588,28 @@ if (isMission) then
         return timer.getTime() + .1
     end, nil, timer.getTime() + .1)
 
-    env.info("DCS Fiddle server running")
+    __info("DCS Fiddle server running")
 elseif (not isMission) then
     __info("Starting fiddle server in the Hooks environment...")
 
-    local scriptsPath = lfs.writedir() .. 'Scripts\\'
+    local fiddleFile = lfs.writedir() .. 'Scripts\\Hooks\\dcs-fiddle-server.lua'
 
     local loop = create_server("127.0.0.1", 12081)
 
     local callbacks = {}
+
+    function callbacks.onSimulationStart()
+        __info("Bootstrapping DCS Fiddle inside the mission using file " .. fiddleFile)
+        net.dostring_in("mission", string.format([[a_do_script("dofile('%s')")]], fiddleFile:gsub("\\","/")))
+    end
+
     function callbacks.onSimulationFrame()
         loop()
     end
 
     DCS.setUserCallbacks(callbacks)
 
-    env.info("DCS Fiddle server running")
+    __info("DCS Fiddle server running")
 else
-    env.info("Failed to start DCS fiddle, unknown environment")
+    __info("Failed to start DCS fiddle, unknown environment")
 end
