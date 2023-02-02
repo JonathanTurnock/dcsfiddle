@@ -30,6 +30,10 @@ See the Getting started guide inside the documentation for more information.
 
 https://dcsfiddle.pages.dev/docs
 
+## License
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
+
 ## Disclaimer
 
 > The Software and code samples available on this website are provided "as is" without warranty of any kind, either express or implied. Use at your own risk. By pressing proceed you understand these risks.
