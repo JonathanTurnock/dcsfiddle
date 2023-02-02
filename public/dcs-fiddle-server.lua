@@ -306,11 +306,13 @@ end
 --- Reads HTTP Message from the given connection
 ---
 --- @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages
+--- @see https://lunarmodules.github.io/luasocket/tcp.html#accept
+--- @param client socket.client LUA Socket Lib Client
 --- @return table, number Request table containing method, original_url, protocol, path, parameters, body, headers. Optionally returns a second item representing an error_code from the match_headers failing
-local function receive_http()
+local function receive_http(client)
     local request = {}
     __debug("receiving start-line")
-    local received, err = coroutine.yield("*l")
+    local received, err = client:receive("*l")
 
     if (err) then
         __error("Failed to get start-line due to " .. err)
@@ -440,6 +442,12 @@ end
 ------------------------------------------------------------------------------------------------------------------------
 --- HTTP Server
 ------------------------------------------------------------------------------------------------------------------------
+if (not require or not package) then
+    if (env and env.error) then
+        env.error("DCS Fiddle failed to inject into the mission scripting environment as require or package was not found.\n\nPlease follow the installation docs to de-sanitize the mission scripting environment\nhttps://dcsfiddle.pages.dev/docs", true)
+        return
+    end
+end
 
 package.path = package.path .. ";.\\LuaSocket\\?.lua"
 package.cpath = package.cpath .. ";.\\LuaSocket\\?.dll"
@@ -468,96 +476,52 @@ local function get_client_id()
     return id
 end
 
-local create_client_handler = function()
-    return coroutine.create(function(id, client)
-        -- Dictionary of Headers that need to match, failure to match fails the read operation and returns the error code
-        local response = { status = INTERNAL_SERVER_ERROR, headers = { ["Content-Type"] = "application/json"} }
+local function handle_client_connection(client)
+    -- Dictionary of Headers that need to match, failure to match fails the read operation and returns the error code
+    local response = { status = INTERNAL_SERVER_ERROR, headers = { ["Content-Type"] = "application/json"} }
 
-        local request = receive_http()
+    local request = receive_http(client)
 
-        if (request) then
-            if (request.method ~= "GET") then
-                response.status = METHOD_NOT_ALLOWED
-            else
-                __info("Handling Request")
-                local success, res = pcall(base64.decode, string.sub(request.path, 2))
-                if (not success) then
-                    __error("Failed to read input due to " .. res)
-                    response.status = BAD_REQUEST
-                else
-                    local env = request.parameters and request.parameters.env
-                    __info("Processing Command " .. res)
-                    local success, res = pcall(handle_request, res, env)
-
-                    if (not success) then
-                        __error("Failed to handle request due to \n" .. res)
-                        response.body = net.lua2json({error=tostring(res)})
-                        response.status = INTERNAL_SERVER_ERROR
-                    else
-                        __info("Handled request")
-                        response.body = net.lua2json({result=res})
-                        response.status = OK
-                    end
-                end
-            end
-        end
-
-        if (server_config.cors) then
-            response.headers["Access-Control-Allow-Origin"] = server_config.cors
-        end
-
-        send_http(client, response)
-
-        __info("Connection Completed")
-        client:close()
-    end)
-end
-
-local register_new_clients = function()
-    local client = tcp_server:accept()
-    if (client) then
-        local id = get_client_id()
-        local coro = create_client_handler()
-        clients[id] = { id = id, coro = coro, client = client }
-        local success, res = coroutine.resume(coro, id, client)
-        if (not success) then
-            __error("Failed to start client handler " .. res)
+    if (request) then
+        if (request.method ~= "GET") then
+            response.status = METHOD_NOT_ALLOWED
         else
-            clients[id].receive_patten = res
-        end
-    end
-end
-
-local receive_and_resume_clients = function()
-    for id, it in pairs(clients) do
-        if (coroutine.status(it.coro) == "suspended") then
-            local line, err = it.client:receive(it.receive_patten)
-            if (err) then
-                __info("Unable to resume due to " .. err .. " handling err")
-                if (err == "closed") then
-                    clients[id] = nil
-                end
+            __info("Handling Request")
+            local success, res = pcall(base64.decode, string.sub(request.path, 2))
+            if (not success) then
+                __error("Failed to read input due to " .. res)
+                response.status = BAD_REQUEST
             else
-                __info("Resuming client handler with line " .. line)
-                local success, res = coroutine.resume(it.coro, line)
+                local env = request.parameters and request.parameters.env
+                __info("Processing Command " .. res)
+                local success, res = pcall(handle_request, res, env)
                 if (not success) then
-                    __error("Failed to resume client handler " .. res)
+                    __error("Failed to handle request due to \n" .. res)
+                    response.body = net.lua2json({error=tostring(res)})
+                    response.status = INTERNAL_SERVER_ERROR
                 else
-                    it.receive_patten = res
+                    __info("Handled request")
+                    response.body = net.lua2json({result=res})
+                    response.status = OK
                 end
             end
         end
     end
+
+    if (server_config.cors) then
+        response.headers["Access-Control-Allow-Origin"] = server_config.cors
+    end
+
+    send_http(client, response)
+
+    __info("Connection Completed")
+    client:close()
 end
 
-do_rx_loop = function()
-    register_new_clients()
-    receive_and_resume_clients()
-end
 
 local function create_server(address, port)
     tcp_server = socket.bind(address, port)
-    tcp_server:settimeout(0)
+    tcp_server:settimeout(0) -- Make non blocking
 
     if not tcp_server then
         __error("Could not bind socket.")
@@ -568,8 +532,18 @@ local function create_server(address, port)
     __info("HTTP Server running on " .. ip .. ":" .. port)
 
     --- Returns function which when called will perform 1 server loop
-    --- Server Loop is 1. registering new clients, 2. looping over clients, receiving network traffic and resuming coroutines with the content.
-    return do_rx_loop
+    --- Note this impl only allows 1 request to be handled at a time
+    return function()
+        local client = tcp_server:accept()
+        if (client) then
+            local success, res = handle_client_connection(client)
+            if (not success) then
+                __error("Failed to run client handler " .. res)
+            else
+                clients[id].receive_patten = res
+            end
+        end
+    end
 end
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -605,6 +579,7 @@ elseif (not isMission) then
     function callbacks.onSimulationStart()
         __info("Bootstrapping DCS Fiddle inside the mission using file " .. fiddleFile)
         net.dostring_in("mission", string.format([[a_do_script("dofile('%s')")]], fiddleFile:gsub("\\","/")))
+        env.info("DCS Fiddle successfully initialized.\n\nHappy Hacking!!")
     end
 
     function callbacks.onSimulationFrame()
