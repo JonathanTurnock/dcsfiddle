@@ -1,4 +1,10 @@
 export const config = {
+  script: {
+    src: "/dcs-fiddle-server.lua",
+    dest: "%USERPROFILE%\\Saved Games\\DCS\\Scripts\\Hooks\\dcs-fiddle-server.lua",
+    destob:
+      "%USERPROFILE%\\Saved Games\\DCS.openbeta\\Scripts\\Hooks\\dcs-fiddle-server.lua",
+  },
   envs: [
     {
       id: "mission",
