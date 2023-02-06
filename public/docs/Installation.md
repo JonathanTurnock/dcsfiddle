@@ -2,11 +2,10 @@
 
 The combined process involves
 
-- Downloading a `httpd.lua` into `%userprofile%\Saved Games\DCS\Scripts\httpd.lua` file.
+- Downloading a `dcs-fiddle-server.lua` into `%userprofile%\Saved Games\DCS\Scripts\Hooks\dcs-fiddle-server.lua` file.
 - Removing the `sanitize` in the mission scripting environment for `require` and `package`.
-- Creating a mission loading the `httpd.lua` and calling `httpd.start(timer, env)` after 1 second.
 
-## Download
+## Installation
 
 > By downloading this file you agree that its usage is at your own risk.
 >
@@ -16,15 +15,17 @@ The combined process involves
 >
 > Modification may result in you unknowingly allowing someone to compromise your PC.
 
-Download: [httpd.lua](http://localhost:3000/httpd.lua)
+Download: [dcs-fiddle-server.lua](/dcs-fiddle-server.lua)
 
 Copy the script file to your Saved games folder, i.e.
 
 ```shell
-%userprofile%\Saved Games\DCS\Scripts\dcsfiddle\httpd.lua
+%userprofile%\Saved Games\DCS\Scripts\Hooks\dcs-fiddle-server.lua
 ```
 
-## Enabling
+> THE FILE NAME MUST BE `dcs-fiddle-server.lua`
+
+## De-Sanitize
 
 With the script installed head to the DCS installation directory, and into the scripts folder and open the mission scripting file.
 
@@ -61,49 +62,16 @@ end
 > LUA uses two dashes as a line comment, put those at the start of the line
 > Changes to this file are lost on each update of DCS
 
-## Creating the Mission
-
-The final step is to create a mission with the dcsfiddle httpd server running.
-
-> You can download an example mission from [/dcs-fiddle.miz](/dcs-fiddle.miz)
-
-Choose the theatre of your choice and add the following triggers.
-
-One to Load the script file
-
-![mission-load-httpd](/mission-load-httpd.png)
-
-And one to Start the server after 1 second
-
-![mission-start-httpd](/mission-start-httpd.png)
-
-The `Do Script` trigger should run the following script:
-
-```lua
-httpd.start(timer, env)
-```
-
 ## Verifying 
 
-If all has gone well you will get a little notice in the logs informing you
+With the sim running refresh the site, it should now connect if you have the `GUI` environment selected.
 
-```sell
-%userprofile%\Saved Games\DCS\Logs\dcs.log
-```
+When a mission is running it should also have the `Mission` environment connected.
 
-```text
-2023-01-24 00:49:28.478 INFO SCRIPTING (Main): DCS Fiddle httpd server running on localhost:12080
-```
+A red cross indicates a bad connection.
 
-You can also hit the health endpoint and confirm its working
+![bad-connection.png](bad-conn.png)
 
-[http://localhost:12080/health](http://localhost:12080/health)
+A green cross indicates a good connection.
 
-Which should return the following
-
-```json
-{
-  "status": "UP",
-  "version": "2023-01-24T22:14:45+00:00"
-}
-```
+![good-connection.png](good-connection.png)

@@ -2,7 +2,6 @@ import { ActionIcon, Navbar, Tooltip } from "@mantine/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBook,
-  faCompass,
   faHome,
   faQuestionCircle,
 } from "@fortawesome/free-solid-svg-icons";

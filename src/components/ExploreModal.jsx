@@ -1,4 +1,4 @@
-import { List, Modal, Title, Text, Stack } from "@mantine/core";
+import { List, Modal, Stack, Text, Title } from "@mantine/core";
 import { ExploreNode } from "./ExploreNode";
 
 export const ExploreModal = ({ onClose, open }) => {

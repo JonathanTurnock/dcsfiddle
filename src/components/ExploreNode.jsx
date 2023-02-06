@@ -1,9 +1,9 @@
 import { ActionIcon, Group, List, Stack, Text } from "@mantine/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faSquare,
   faSquareCaretDown,
   faSquareCaretRight,
-  faSquare,
 } from "@fortawesome/free-regular-svg-icons";
 import { useExplorer } from "../hooks/useExplore";
 import { entries } from "lodash";

@@ -15,8 +15,15 @@ import { useShareModal } from "./hooks/useShareModal";
 import { ShareModal } from "./components/ShareModal";
 import { useBoolean, useSearchParam } from "react-use";
 import { ExploreModal } from "./components/ExploreModal";
+import { useEnvironment } from "./context/environment";
 
 function App() {
+  const env = useSearchParam("env");
+  const state = useSearchParam("state");
+  const { environments, environment, setEnvironment, status } = useEnvironment(
+    env,
+    state
+  );
   const command = useSearchParam("command");
   const editorRef = useRef(null);
   const { responses, submitting, submitCommand } = useDcsCommand();
@@ -79,6 +86,10 @@ function App() {
       />
       <div className={styles.header}>
         <AppHeader
+          envs={environments}
+          env={environment}
+          status={status}
+          onChangeEnv={setEnvironment}
           submitting={submitting}
           onSubmit={() => submitCommand(editorRef.current.getValue())}
           onShowGreetingModal={greetingModal.open}
