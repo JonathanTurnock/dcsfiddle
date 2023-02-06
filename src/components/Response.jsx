@@ -39,7 +39,7 @@ export const Response = ({ date, response }) => {
           <Prism language="json">
             {isObject(response)
               ? JSON.stringify(response, undefined, 2)
-              : response}
+              : `${response}`}
           </Prism>
         )}
       </Collapse>

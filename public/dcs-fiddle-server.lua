@@ -567,6 +567,7 @@ if (isMission) then
     end, nil, timer.getTime() + .1)
 
     __info("DCS Fiddle server running")
+    env.info("DCS Fiddle successfully initialized.\n\nHappy Hacking!!", true)
 elseif (not isMission) then
     __info("Starting fiddle server in the Hooks environment...")
 
@@ -579,7 +580,6 @@ elseif (not isMission) then
     function callbacks.onSimulationStart()
         __info("Bootstrapping DCS Fiddle inside the mission using file " .. fiddleFile)
         net.dostring_in("mission", string.format([[a_do_script("dofile('%s')")]], fiddleFile:gsub("\\","/")))
-        env.info("DCS Fiddle successfully initialized.\n\nHappy Hacking!!")
     end
 
     function callbacks.onSimulationFrame()
