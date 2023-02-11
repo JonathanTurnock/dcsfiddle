@@ -8,37 +8,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload, faWindowMaximize } from "@fortawesome/free-solid-svg-icons";
 const bytes = require("bytes");
 
-function syntaxHighlight(json) {
-  json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-      var cls = 'number';
-      if (/^"/.test(match)) {
-          if (/:$/.test(match)) {
-              cls = 'key';
-          } else {
-              cls = 'string';
-          }
-      } else if (/true|false/.test(match)) {
-          cls = 'boolean';
-      } else if (/null/.test(match)) {
-          cls = 'null';
-      }
-      return '<span class="' + cls + '">' + match + '</span>';
-  });
-}
-
-const colorStyle = `<style>
-body {
-  background: #111;
-  color: orange;
-}
-pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
-.string { color: springgreen; }
-.number { color: cyan; }
-.boolean { color: blue; }
-.null { color: magenta; }
-.key { color: white; }</style>`;
-
 export const Response = ({ date, response }) => {
   const [collapsed, toggleCollapse] = useToggle(false);
 
@@ -64,10 +33,8 @@ export const Response = ({ date, response }) => {
         </ActionIcon>
         <ActionIcon onClick={() => {
           const pretty = JSON.stringify(response, undefined, 2)
-          const colored = syntaxHighlight(pretty)
           const newWindow = window.open("json","_blank");
-          newWindow.document.write('<html><body><pre>' + colored + '</pre></body></html>' )
-          newWindow.document.write(colorStyle)
+          newWindow.document.write('<html><body><pre>' + pretty + '</pre></body></html>' )
           newWindow.focus();
         }
         }>
