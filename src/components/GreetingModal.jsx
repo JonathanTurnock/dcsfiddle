@@ -54,7 +54,7 @@ export const GreetingModal = ({ greetingModal }) => {
 
         <Text>Download the hook</Text>
 
-        <a href="/dcs-fiddle-server.lua" target="_blank">
+        <a href="/dcs-fiddle-server.lua" download target="_blank">
           <Group>
             <FontAwesomeIcon icon={faDownload} />
             <Text variant="link">dcs-fiddle-server.lua</Text>
