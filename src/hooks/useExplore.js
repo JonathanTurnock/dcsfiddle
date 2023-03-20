@@ -4,6 +4,32 @@ import { showNotification } from "@mantine/notifications";
 import { useEnvironment } from "../context/environment";
 
 const getCommand = (item) => `
+function getArgs(fun)
+    local args = {}
+    local hook = debug.gethook()
+
+    local argHook = function( ... )
+        local info = debug.getinfo(3)
+        if 'pcall' ~= info.name then return end
+
+        for i = 1, math.huge do
+            local name, value = debug.getlocal(2, i)
+            if '(*temporary)' == name then
+                debug.sethook(hook)
+                error('')
+                return
+            end
+            table.insert(args,name)
+        end
+    end
+
+    debug.sethook(argHook, "c")
+    pcall(fun)
+
+    return args
+end
+
+
 local function getMeta (data) 
     local meta = {}
 
@@ -12,8 +38,10 @@ local function getMeta (data)
 
         if t == 'string' or t == 'number' or t == 'nil' or t == 'boolean' then
             meta[k] = v
+        elseif t == 'function' then
+            meta[k] = t..' '..k..'('..table.concat(getArgs(v), ', ')..')'
         else
-            meta[k] = type(v)
+            meta[k] = t
         end
     end
     return meta
@@ -157,6 +185,5 @@ export const useExplorer = (item) => {
       setFetching(false);
     }
   };
-
   return { data, fetchData, fetching, clearData: () => setData(undefined) };
 };
