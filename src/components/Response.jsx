@@ -1,6 +1,7 @@
 import { ActionIcon, Collapse, Group, Stack, Text } from "@mantine/core";
 import { useToggle } from "react-use";
 import { CollapseButton } from "./CollapseButton";
+import Editor from "@monaco-editor/react";
 import { isObject } from "lodash";
 import { Prism } from "@mantine/prism";
 import fileDownload from "js-file-download";
@@ -10,9 +11,10 @@ const bytes = require("bytes");
 
 export const Response = ({ date, response }) => {
   const [collapsed, toggleCollapse] = useToggle(false);
-
+  const responseData = JSON.stringify(response, undefined, 2)
+  const length = (responseData.match(/\n/g) || [0]).length
   const displayRes = isObject(response)
-    ? JSON.stringify(response, undefined, 2)
+    ? responseData
     : response;
 
   const responseBytes = displayRes.length;
@@ -36,11 +38,20 @@ export const Response = ({ date, response }) => {
         {isTooLarge ? (
           <Prism language="text">{tooLargeMessage}</Prism>
         ) : (
-          <Prism language="json">
-            {isObject(response)
-              ? JSON.stringify(response, undefined, 2)
-              : `${response}`}
-          </Prism>
+          // Not a fan of this hight solution but it works
+          <div style={{height: `${length*19}px`, maxHeight: '80vh'}}> 
+            <Editor
+              theme="vs-dark"
+              defaultLanguage="json"
+              defaultValue={responseData}
+              onMount={() => {}}
+              options={{
+                fontFamily: "IBM Plex Mono",
+                fontSize: 14,
+                domReadOnly: true
+              }}
+            />
+          </div>
         )}
       </Collapse>
     </Stack>
