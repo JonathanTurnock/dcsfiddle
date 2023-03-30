@@ -56,7 +56,7 @@ function App() {
                 <Stack
                   p={"xs"}
                   spacing={4}
-                  style={{ display: "flex", flex: "1 1 auto" }}
+                  style={{ display: "flex", flex: "1 1 auto", overflowY:'scroll' }}
                 >
                   {responses.map(([date, response]) => (
                     <Response key={date} response={response} date={date} />
