@@ -19,8 +19,8 @@ export const useDcsCommand = () => {
       );
 
       setResponses([
-        ...responses,
         [new Date().toISOString(), data.result || data.error || ""],
+        ...responses,
       ]);
     } catch (e) {
       showNotification({
