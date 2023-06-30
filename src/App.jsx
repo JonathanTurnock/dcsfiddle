@@ -17,7 +17,7 @@ import { useBoolean, useSearchParam } from "react-use";
 import { ExploreModal } from "./components/ExploreModal";
 import { useEnvironment } from "./context/environment";
 import { useMizDiff } from "./hooks/useMizDiff";
-import { sortByKeys } from "./functions/sortByKeys";
+import sortobject from "deep-sort-object";
 
 function App() {
   const env = useSearchParam("env");
@@ -113,12 +113,12 @@ function App() {
                   defaultLanguage="json"
                   original={
                     md.leftJson
-                      ? JSON.stringify(sortByKeys(md.leftJson), undefined, 2)
+                      ? JSON.stringify(sortobject(md.leftJson), undefined, 2)
                       : md.left
                   }
                   modified={
                     md.rightJson
-                      ? JSON.stringify(sortByKeys(md.rightJson), undefined, 2)
+                      ? JSON.stringify(sortobject(md.rightJson), undefined, 2)
                       : md.right
                   }
                   onMount={handleDiffEditorDidMount}
