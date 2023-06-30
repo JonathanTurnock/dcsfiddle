@@ -44,9 +44,11 @@ export const ExploreNode = ({ k, v, scope }) => {
           </Text>
         </Group>
         <List>
-          {entries(data).sort(([ak],[bk]) => ak.localeCompare(bk)).map(([k, v]) => (
-            <ExploreNode k={k} v={v} scope={myScope} />
-          ))}
+          {entries(data)
+            .sort(([ak], [bk]) => ak.localeCompare(bk))
+            .map(([k, v]) => (
+              <ExploreNode k={k} v={v} scope={myScope} />
+            ))}
         </List>
       </Stack>
     </List.Item>

@@ -7,6 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/fontawesome-free-brands";
 import { useLocation } from "react-use";
+import { faFileZipper } from "@fortawesome/free-regular-svg-icons";
 
 const slashify = (str) => (str.endsWith("/") ? str : `${str}/`);
 
@@ -41,6 +42,12 @@ export const AppNavbar = ({ router }) => {
           label={"Home"}
           icon={faHome}
           onClick={() => router.navigate("/")}
+        />
+        <NavbarLink
+          path={"/diff"}
+          label={"Miz File Diff"}
+          icon={faFileZipper}
+          onClick={() => router.navigate("/diff")}
         />
         <NavbarLink
           path={"/docs"}

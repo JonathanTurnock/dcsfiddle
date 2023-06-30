@@ -32,6 +32,13 @@
   border-bottom: solid #2d2f34 1px;
 }
 
+.diffEditor {
+  grid-column: 2/4;
+  grid-row: 2/3;
+  display: flex;
+  border-bottom: solid #2d2f34 1px;
+}
+
 .terminal {
   grid-column: 3/4;
   grid-row: 2/3;

@@ -1,6 +1,6 @@
 import "./App.module.css";
-import { Stack } from "@mantine/core";
-import Editor from "@monaco-editor/react";
+import { Divider, FileInput, NavLink, Stack } from "@mantine/core";
+import Editor, { DiffEditor } from "@monaco-editor/react";
 import { useMemo, useRef } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import styles from "./App.module.css";
@@ -16,6 +16,8 @@ import { ShareModal } from "./components/ShareModal";
 import { useBoolean, useSearchParam } from "react-use";
 import { ExploreModal } from "./components/ExploreModal";
 import { useEnvironment } from "./context/environment";
+import { useMizDiff } from "./hooks/useMizDiff";
+import { sortByKeys } from "./functions/sortByKeys";
 
 function App() {
   const env = useSearchParam("env");
@@ -26,10 +28,12 @@ function App() {
   );
   const command = useSearchParam("command");
   const editorRef = useRef(null);
+  const diffEditorRef = useRef(null);
   const { responses, submitting, submitCommand } = useDcsCommand();
   const greetingModal = useGreetingModal();
   const shareDialog = useShareModal(() => editorRef.current.getValue());
   const [open, toggleOpen] = useBoolean(false);
+  const md = useMizDiff();
 
   const router = useMemo(
     () =>
@@ -56,7 +60,11 @@ function App() {
                 <Stack
                   p={"xs"}
                   spacing={4}
-                  style={{ display: "flex", flex: "1 1 auto", overflowY:'scroll' }}
+                  style={{
+                    display: "flex",
+                    flex: "1 1 auto",
+                    overflowY: "scroll",
+                  }}
                 >
                   {responses.map(([date, response]) => (
                     <Response key={date} response={response} date={date} />
@@ -66,13 +74,74 @@ function App() {
             </>
           ),
         },
+        {
+          path: "/diff",
+          element: (
+            <>
+              <div className={styles.diffEditor}>
+                <Stack w={300}>
+                  <Stack p="xs">
+                    <FileInput
+                      label="Left"
+                      disabled={status.state !== "up"}
+                      placeholder="Left miz file"
+                      withAsterisk
+                      onChange={md.updateLeft}
+                    />
+                    <FileInput
+                      label="Right"
+                      disabled={status.state !== "up" || !md.leftJson}
+                      placeholder="Right miz file"
+                      withAsterisk
+                      onChange={md.updateRight}
+                    />
+                  </Stack>
+                  <Divider />
+                  <Stack spacing={0}>
+                    {md.files.sort().map((it) => (
+                      <NavLink
+                        key={it}
+                        active={md.selectedFile === it}
+                        onClick={() => md.selectFile(it)}
+                        label={it}
+                      />
+                    ))}
+                  </Stack>
+                </Stack>
+                <DiffEditor
+                  theme="vs-dark"
+                  defaultLanguage="json"
+                  original={
+                    md.leftJson
+                      ? JSON.stringify(sortByKeys(md.leftJson), undefined, 2)
+                      : md.left
+                  }
+                  modified={
+                    md.rightJson
+                      ? JSON.stringify(sortByKeys(md.rightJson), undefined, 2)
+                      : md.right
+                  }
+                  onMount={handleDiffEditorDidMount}
+                  options={{
+                    fontFamily: "IBM Plex Mono",
+                    fontSize: 14,
+                  }}
+                />
+              </div>
+            </>
+          ),
+        },
         ...docs,
       ]),
-    [responses]
+    [responses, status.state, md.leftJson, md.rightJson]
   );
 
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
+  }
+
+  function handleDiffEditorDidMount(editor, monaco) {
+    diffEditorRef.current = editor;
   }
 
   return (

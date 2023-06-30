@@ -7,15 +7,14 @@ import { Prism } from "@mantine/prism";
 import fileDownload from "js-file-download";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
+
 const bytes = require("bytes");
 
 export const Response = ({ date, response }) => {
   const [collapsed, toggleCollapse] = useToggle(false);
-  const responseData = JSON.stringify(response, undefined, 2)
-  const length = (responseData.match(/\n/g) || [0]).length
-  const displayRes = isObject(response)
-    ? responseData
-    : response;
+  const responseData = JSON.stringify(response, undefined, 2);
+  const length = (responseData.match(/\n/g) || [0]).length;
+  const displayRes = isObject(response) ? responseData : response;
 
   const responseBytes = displayRes.length;
 
@@ -39,7 +38,7 @@ export const Response = ({ date, response }) => {
           <Prism language="text">{tooLargeMessage}</Prism>
         ) : (
           // Not a fan of this hight solution but it works
-          <div style={{height: `${length*19}px`, maxHeight: '80vh'}}> 
+          <div style={{ height: `${length * 19}px`, maxHeight: "80vh" }}>
             <Editor
               theme="vs-dark"
               defaultLanguage="json"
@@ -48,7 +47,7 @@ export const Response = ({ date, response }) => {
               options={{
                 fontFamily: "IBM Plex Mono",
                 fontSize: 14,
-                domReadOnly: true
+                domReadOnly: true,
               }}
             />
           </div>
