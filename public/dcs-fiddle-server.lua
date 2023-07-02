@@ -55,18 +55,25 @@ local function is_table_array(val)
     -- Check if the first element of the table is not nil or the table is empty.
     -- These are two signs that the table might be an array.
     if rawget(val, 1) ~= nil or next(val) == nil then
-        -- Initialize a counter to track the current index.
-        local n = 0
-        -- Iterate over every key-value pair in the table.
-        for k, v in pairs(val) do
-            -- Increment the index counter.
-            n = n + 1
-            -- Check if the current key is not a number or if it's not the expected index.
-            -- If either of these is true, then the table is not a sequentially indexed array.
-            if type(k) ~= "number" or n ~= k then
+        -- Extract all numeric keys and sort them.
+        local keys = {}
+        for k in pairs(val) do
+            if type(k) == "number" then
+                table.insert(keys, k)
+            else
+                -- If any key is not a number, the table is not an array.
                 return false
             end
         end
+        table.sort(keys)
+
+        -- Check the sorted keys to see if they form a continuous sequence starting from 1.
+        for i, k in ipairs(keys) do
+            if i ~= k then
+                return false
+            end
+        end
+
         -- If all keys were numeric and in sequence, then the table is an array.
         return true
     else
