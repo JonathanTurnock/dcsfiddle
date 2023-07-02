@@ -38,13 +38,19 @@ export const Response = ({ date, response }) => {
           <Prism language="text">{tooLargeMessage}</Prism>
         ) : (
           // Not a fan of this hight solution but it works
-          <div style={{ height: `${length * 19}px`, maxHeight: "80vh" }}>
+          <div
+            style={{
+              height: `${(length + 2) * 19}px`,
+              maxHeight: "80vh",
+            }}
+          >
             <Editor
               theme="vs-dark"
               defaultLanguage="json"
               defaultValue={responseData}
               onMount={() => {}}
               options={{
+                readOnly: true,
                 fontFamily: "IBM Plex Mono",
                 fontSize: 14,
                 domReadOnly: true,
