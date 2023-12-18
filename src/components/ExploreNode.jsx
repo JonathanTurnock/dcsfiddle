@@ -26,6 +26,7 @@ import {
 import { match } from "ts-pattern";
 import { useClipboard } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
+import { minimatch } from "minimatch";
 
 const canExplore = (v) => v === "table" || v === "root";
 
@@ -43,8 +44,8 @@ export const ExploreNode = ({ k, v, scope, filter }) => {
             .join("")}`,
     [myScope]
   );
+  const minimatchAddress = useMemo(() => myScope.join("/"), [myScope]);
   const { data, fetchData, fetching, clearData } = useExplorer(address);
-  const { copy } = useClipboard();
 
   const explorable = useMemo(() => canExplore(v), [v]);
 
@@ -100,7 +101,7 @@ export const ExploreNode = ({ k, v, scope, filter }) => {
                   onClick={() => {
                     copy();
                     showNotification({
-                      message: `Copied ${address} Data to Clipboard`,
+                      message: `Copied ${minimatchAddress} Data to Clipboard`,
                     });
                   }}
                 >
@@ -112,13 +113,34 @@ export const ExploreNode = ({ k, v, scope, filter }) => {
         </Group>
         <List>
           {isArray(data)
-            ? data.map((v, idx) => (
-                <ExploreNode k={idx + 1} v={v} scope={myScope} />
-              ))
+            ? data
+                .filter(
+                  ([k]) =>
+                    !filter ||
+                    minimatch([...myScope, k].join("/"), filter, {
+                      partial: true,
+                    })
+                )
+                .map((v, idx) => (
+                  <ExploreNode
+                    k={idx + 1}
+                    v={v}
+                    scope={myScope}
+                    filter={filter}
+                  />
+                ))
             : entries(data)
-                .filter(([k]) => !filter || k.includes(filter))
+                .filter(
+                  ([k]) =>
+                    !filter ||
+                    minimatch([...myScope, k].join("/"), filter, {
+                      partial: true,
+                    })
+                )
                 .sort(([ak], [bk]) => ak.localeCompare(bk))
-                .map(([k, v]) => <ExploreNode k={k} v={v} scope={myScope} />)}
+                .map(([k, v]) => (
+                  <ExploreNode k={k} v={v} scope={myScope} filter={filter} />
+                ))}
         </List>
       </Stack>
     </List.Item>

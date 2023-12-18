@@ -23,7 +23,9 @@ export const ExploreModal = ({ onClose, open }) => {
 
         <TextInput
           icon={<FontAwesomeIcon icon={faSearch} />}
-          placeholder={"Search within results..."}
+          placeholder={
+            "Search using minimatch syntax, i.e. */db/Units/Planes/Plane/*/*+(Name|type|WorldID)"
+          }
           defaultValue={filter}
           onBlur={(ev) => setFilter(ev.target.value)}
         />
