@@ -24,7 +24,6 @@ import {
   VscSymbolString,
 } from "react-icons/vsc";
 import { match } from "ts-pattern";
-import { useClipboard } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { minimatch } from "minimatch";
 
@@ -123,6 +122,7 @@ export const ExploreNode = ({ k, v, scope, filter }) => {
                 )
                 .map((v, idx) => (
                   <ExploreNode
+                    key={`${myScope.join("/")}/${idx + 1}`}
                     k={idx + 1}
                     v={v}
                     scope={myScope}
@@ -139,7 +139,13 @@ export const ExploreNode = ({ k, v, scope, filter }) => {
                 )
                 .sort(([ak], [bk]) => ak.localeCompare(bk))
                 .map(([k, v]) => (
-                  <ExploreNode k={k} v={v} scope={myScope} filter={filter} />
+                  <ExploreNode
+                    key={`${myScope.join("/")}/${k}`}
+                    k={k}
+                    v={v}
+                    scope={myScope}
+                    filter={filter}
+                  />
                 ))}
         </List>
       </Stack>
